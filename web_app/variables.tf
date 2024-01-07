@@ -5,7 +5,6 @@ variable "aws_region" {
 
 }
 
-
 variable "vpc_public_subnets_cidr_block" {
   type        = list(string)
   description = "CIDR Block for Public Subnet in VPC"

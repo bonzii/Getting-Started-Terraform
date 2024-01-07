@@ -1,16 +1,16 @@
 
 # AWS_LB
 resource "aws_lb" "nginx" {
-  name               = "globo_web_alb"
+  name               = "globo-web-alb"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb_sg.id]
-  subnets            = [aws_subnet.public_subnet1, aws_subnet.public_subnet2]
+  subnets            = [aws_subnet.public_subnet1.id, aws_subnet.public_subnet2.id]
 
   enable_deletion_protection = false
 
+  tags = local.common_tags
 
-  tags = locals.common_tags
 }
 
 # AWS_LB_TARGET_GROUP
@@ -39,11 +39,18 @@ resource "aws_lb_listener" "nginx" {
 }
 
 # AWS_LB_TARGET_GROUP_ATTACHMENT
-resource "aws_lb_target_group_attachment" "nginx_target_group_attach" {
+resource "aws_lb_target_group_attachment" "nginx1" {
   target_group_arn = aws_lb_target_group.nginx_target_group.arn
-  target_id        = [aws_instance.nginx1, aws_instance.nginx2]
+  target_id        = aws_instance.nginx1.id
   port             = 80
 }
+
+resource "aws_lb_target_group_attachment" "nginx2" {
+  target_group_arn = aws_lb_target_group.nginx_target_group.arn
+  target_id        = aws_instance.nginx2.id
+  port             = 80
+}
+
 
 
 
